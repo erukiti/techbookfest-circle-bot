@@ -17,13 +17,14 @@ const fetchCheckedCount = async userToken => {
     domain: 'techbookfest.org'
   })
   const jar = rp.jar()
-  jar.setCookie(cookie, 'https://techbookfest.org')
+  jar.setCookie(cookie.toString(), 'https://techbookfest.org')
   const opt = {
     url: 'https://techbookfest.org/api/circle/own',
     jar
   }
   const circles = JSON.parse(await rp(opt))
-  const checkedCount = circles.filter(circle => circle.event.id === 'tbf04').map(circle => circle.checkedCount)[0]
+  // console.log(circles)
+  const checkedCount = circles.filter(circle => circle.event.id === 'tbf05').map(circle => circle.checkedCount)[0]
   return checkedCount
 }
 
@@ -41,6 +42,9 @@ const signIn = async () => {
   }
   const res = await rp(opt)
   const matched = re.exec(res.headers['set-cookie'][0])
+  if (!matched) {
+    throw new Error(`login failed or Bug??? ${res.headers}`)
+  }
   return matched[1]
 }
 
